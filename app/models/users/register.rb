@@ -26,9 +26,11 @@ module Users
         password_confirmation:
       )
 
-      return Failure(:validation_error, result: { errors: user.errors.as_json }) unless user.valid?
-
-      Success(:user_created, result: { user: })
+      if user.save
+        Success(:user_created, result: { user: user.as_json(except: [:password_digest]) })
+      else
+        Failure(:validation_error, result: { errors: user.errors.as_json }) unless user.valid?
+      end
     end
   end
 end

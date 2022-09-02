@@ -26,13 +26,10 @@ RSpec.describe Users::Register do
           result = described_class.call(email:, password:, password_confirmation:)
 
           # then
-          expect(result[:errors])
-            .to match(
-              hash_including(
-                password_confirmation: ["can't be blank"],
-                password: ["can't be blank"]
-              )
-            )
+          expect(result[:errors]).to include(
+            password_confirmation: ["can't be blank"],
+            password: ["can't be blank"]
+          )
         end
       end
 
@@ -59,12 +56,9 @@ RSpec.describe Users::Register do
           result = described_class.call(email:, password:, password_confirmation:)
 
           # then
-          expect(result[:errors])
-            .to match(
-              hash_including(
-                password_confirmation: ["doesn't match password"]
-              )
-            )
+          expect(result[:errors]).to include(
+            password_confirmation: ["doesn't match password"]
+          )
         end
       end
 
@@ -90,12 +84,9 @@ RSpec.describe Users::Register do
           result = described_class.call(email:, password:, password_confirmation:)
 
           # then
-          expect(result[:errors])
-            .to match(
-              hash_including(
-                email: ["can't be blank"]
-              )
-            )
+          expect(result[:errors]).to include(
+            email: ["can't be blank"]
+          )
         end
       end
 
@@ -121,10 +112,9 @@ RSpec.describe Users::Register do
           result = described_class.call(email:, password:, password_confirmation:)
 
           # then
-          expect(result[:errors])
-            .to match(
-              hash_including(email: ['is invalid'])
-            )
+          expect(result[:errors]).to include(
+            email: ['is invalid']
+          )
         end
       end
     end
@@ -148,8 +138,10 @@ RSpec.describe Users::Register do
         result = described_class.call(email:, password:, password_confirmation:)
 
         # then
-        expect(result[:user]).to be_a(User)
-        expect(result[:user].email).to eq(email)
+        expect(result[:user]).to include(
+          'email' => email,
+          'id' => 1
+        )
       end
     end
   end
