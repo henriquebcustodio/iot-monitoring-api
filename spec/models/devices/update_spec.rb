@@ -44,10 +44,48 @@ RSpec.describe Devices::Update do
         end
       end
 
+      context 'with an invalid label' do
+        let(:description) { 'sample' }
+        let(:name) { 'sample' }
+        let(:device) do
+          Device.create(
+            name: 'sample',
+            label: 'sample',
+            description: 'sample',
+            user:
+          )
+        end
+
+        it 'returns a failure' do
+          # given
+          label = %w[name# /wrong +invalid].sample
+
+          # when
+          result = described_class.call(name:, description:, label:, id: device.id, user_id: user.id)
+
+          # then
+          expect(result).to be_a_failure
+        end
+
+        it 'exposes the error' do
+          # given
+          label = %w[name# /wrong +invalid].sample
+
+          # when
+          result = described_class.call(name:, description:, label:, id: device.id, user_id: user.id)
+
+          # then
+          expect(result.type).to be(:invalid_label)
+
+          expect(result[:errors]).to include(
+            label: 'must not include #, + or / characters'
+          )
+        end
+      end
+
       context 'with an used device label' do
         let(:description) { 'sample' }
         let(:name) { 'sample' }
-        let(:user) { create_user }
         let(:device) do
           Device.create(
             name: 'sample',

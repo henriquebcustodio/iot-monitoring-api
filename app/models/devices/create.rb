@@ -12,6 +12,10 @@ module Devices
 
       return Failure(:blank_arguments, result: { errors: }) unless errors.empty?
 
+      if label.match(%r{[#+/]})
+        return Failure(:invalid_label, result: { errors: { label: 'must not include #, + or / characters' } })
+      end
+
       token = generate_token
 
       device = Device.new(
