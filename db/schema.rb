@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_02_011126) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_08_002024) do
+  create_table "devices", force: :cascade do |t|
+    t.string "name"
+    t.string "label"
+    t.text "description"
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "token"
+    t.index ["user_id"], name: "index_devices_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -18,4 +29,5 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_02_011126) do
     t.string "password_digest"
   end
 
+  add_foreign_key "devices", "users"
 end

@@ -1,6 +1,6 @@
 module Users
   class Authenticate < ::Micro::Case
-    attribute :token, default: ->(value) { value&.to_s&.strip }
+    attribute :token, default: ::Utils::ToStrippedString
 
     def call!
       decoded_token = decode_token(token)

@@ -53,3 +53,5 @@ group :development do
   # gem "spring"
   gem 'rubocop'
 end
+
+gem "mqtt", "~> 0.5.0"

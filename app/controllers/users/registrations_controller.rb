@@ -1,5 +1,6 @@
 module Users
   class RegistrationsController < ApplicationController
+
     def create
       user_params = params.require(:user).permit(:email, :password, :password_confirmation)
 

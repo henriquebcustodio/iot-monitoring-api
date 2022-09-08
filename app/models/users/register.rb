@@ -1,8 +1,8 @@
 module Users
   class Register < ::Micro::Case
-    attribute :email, default: ->(value) { value&.to_s&.strip }
-    attribute :password, default: ->(value) { value&.to_s&.strip }
-    attribute :password_confirmation, default: ->(value) { value&.to_s&.strip }
+    attribute :email, default: ::Utils::ToStrippedString
+    attribute :password, default: ::Utils::ToStrippedString
+    attribute :password_confirmation, default: ::Utils::ToStrippedString
 
     def call!
       errors = {}
@@ -29,7 +29,7 @@ module Users
       if user.save
         Success(:user_created, result: { user: user.as_json(except: [:password_digest]) })
       else
-        Failure(:validation_error, result: { errors: user.errors.as_json }) unless user.valid?
+        Failure(:validation_error, result: { errors: user.errors.as_json })
       end
     end
   end

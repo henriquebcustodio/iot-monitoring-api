@@ -1,7 +1,7 @@
 module Users
   class Login < ::Micro::Case
-    attribute :email, default: ->(value) { value&.to_s&.strip }
-    attribute :password, default: ->(value) { value&.to_s&.strip }
+    attribute :email, default: ::Utils::ToStrippedString
+    attribute :password, default: ::Utils::ToStrippedString
 
     def call!
       user = User.find_by(email:)
