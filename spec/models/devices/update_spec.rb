@@ -138,9 +138,6 @@ RSpec.describe Devices::Update do
     describe 'success' do
       context 'without blank arguments' do
         let(:user) { create_user }
-        let(:name) { 'device' }
-        let(:description) { 'device description' }
-        let(:label) { 'device-label' }
         let(:device) do
           Device.create(
             name: 'sample',
@@ -151,6 +148,11 @@ RSpec.describe Devices::Update do
         end
 
         it 'returns a success' do
+          # given
+          name = 'device'
+          description = 'device description'
+          label = 'device label'
+
           # when
           result = described_class.call(name:, description:, label:, id: device.id, user_id: user.id)
 
@@ -159,23 +161,25 @@ RSpec.describe Devices::Update do
         end
 
         it 'exposes the device' do
+          # given
+          name = 'device'
+          description = 'device description'
+          label = 'device label'
+
           # when
           result = described_class.call(name:, description:, label:, id: device.id, user_id: user.id)
 
           # then
-          expect(result[:device]).to include(
-            'name' => name,
-            'description' => description,
-            'label' => label
+          expect(result[:device]).to have_attributes(
+            name:,
+            description:,
+            label:
           )
         end
       end
 
       context 'with blank arguments' do
         let(:user) { create_user }
-        let(:name) { '' }
-        let(:description) { '' }
-        let(:label) { 'device-label' }
         let(:device) do
           Device.create(
             name: 'sample',
@@ -186,6 +190,11 @@ RSpec.describe Devices::Update do
         end
 
         it 'returns a success' do
+          # given
+          name = ''
+          description = ''
+          label = 'device-label'
+
           # when
           result = described_class.call(name:, description:, label:, id: device.id, user_id: user.id)
 
@@ -194,14 +203,19 @@ RSpec.describe Devices::Update do
         end
 
         it 'exposes the device' do
+          # given
+          name = ''
+          description = ''
+          label = 'device-label'
+
           # when
           result = described_class.call(name:, description:, label:, id: device.id, user_id: user.id)
 
           # then
-          expect(result[:device]).to include(
-            'name' => 'sample',
-            'description' => 'sample',
-            'label' => label
+          expect(result[:device]).to have_attributes(
+            name: 'sample',
+            description: 'sample',
+            label:
           )
         end
       end

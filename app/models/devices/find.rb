@@ -7,7 +7,7 @@ module Devices
 
       return Failure(:not_found, result: { errors: { id: ['not found'] } }) if device.nil?
 
-      Success(result: { device: device.as_json })
+      Success(result: { device: })
     end
   end
 end

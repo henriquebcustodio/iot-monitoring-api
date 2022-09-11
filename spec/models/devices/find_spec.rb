@@ -71,12 +71,7 @@ RSpec.describe Devices::Find do
           result = described_class.call(id: device.id, user_id: user.id)
 
           # then
-          expect(result[:device]).to include(
-            'id' => device.id,
-            'name' => device.name,
-            'label' => device.name,
-            'description' => device.description
-          )
+          expect(result[:device]).to eq(device)
         end
       end
     end

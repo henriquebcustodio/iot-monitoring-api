@@ -27,7 +27,7 @@ module Devices
       )
 
       if device.save
-        Success(:device_created, result: { device: device.as_json })
+        Success(:device_created, result: { device: })
       else
         Failure(:validation_error, result: { errors: device.errors.as_json })
       end

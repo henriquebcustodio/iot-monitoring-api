@@ -20,7 +20,7 @@ module Devices
       device.description = description unless description.blank?
 
       if device.save
-        Success(:device_updated, result: { device: device.as_json })
+        Success(:device_updated, result: { device: })
       else
         Failure(:validation_error, result: { errors: device.errors.as_json })
       end

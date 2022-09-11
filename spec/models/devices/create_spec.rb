@@ -148,12 +148,13 @@ RSpec.describe Devices::Create do
 
     describe 'success' do
       context 'with valid arguments' do
-        let(:name) { 'device' }
-        let(:description) { 'device description' }
-        let(:label) { 'device-label' }
-        let(:user) { create_user }
-
         it 'returns a success' do
+          # given
+          name = 'device'
+          description = 'device description'
+          label = 'device-label'
+          user = create_user
+
           # when
           result = described_class.call(name:, description:, label:, user:)
 
@@ -162,19 +163,33 @@ RSpec.describe Devices::Create do
         end
 
         it 'exposes the device' do
+          # given
+          name = 'device'
+          description = 'device description'
+          label = 'device-label'
+          user = create_user
+
           # when
           result = described_class.call(name:, description:, label:, user:)
 
           # then
-          expect(result[:device]).to include(
-            'name' => name,
-            'description' => description,
-            'label' => label,
-            'user_id' => user.id
+          expect(result[:device]).to be_a(Device)
+          expect(result[:device]).to have_attributes(
+            id: 1,
+            name:,
+            description:,
+            label:,
+            user_id: user.id
           )
         end
 
         it 'generates a token' do
+          # given
+          name = 'device'
+          description = 'device description'
+          label = 'device-label'
+          user = create_user
+
           # when
           result = described_class.call(name:, description:, label:, user:)
 
