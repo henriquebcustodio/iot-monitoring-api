@@ -11,9 +11,8 @@ RSpec.describe Devices::Update do
 
   describe '.call' do
     describe 'failures' do
-      let(:user) { create_user }
-
       context 'with a nonexistent device id' do
+        let(:user) { create_user }
         let(:name) { 'sample' }
         let(:label) { 'sample' }
         let(:description) { 'sample' }
@@ -45,6 +44,7 @@ RSpec.describe Devices::Update do
       end
 
       context 'with an invalid label' do
+        let(:user) { create_user }
         let(:description) { 'sample' }
         let(:name) { 'sample' }
         let(:device) do
@@ -84,6 +84,7 @@ RSpec.describe Devices::Update do
       end
 
       context 'with an used device label' do
+        let(:user) { create_user }
         let(:description) { 'sample' }
         let(:name) { 'sample' }
         let(:device) do
@@ -135,9 +136,8 @@ RSpec.describe Devices::Update do
     end
 
     describe 'success' do
-      let(:user) { create_user }
-
       context 'without blank arguments' do
+        let(:user) { create_user }
         let(:name) { 'device' }
         let(:description) { 'device description' }
         let(:label) { 'device-label' }
@@ -172,6 +172,7 @@ RSpec.describe Devices::Update do
       end
 
       context 'with blank arguments' do
+        let(:user) { create_user }
         let(:name) { '' }
         let(:description) { '' }
         let(:label) { 'device-label' }
