@@ -1,6 +1,19 @@
 class DevicesController < ApplicationController
   before_action :authenticate_user
 
+  def show
+    input = {
+      id: params[:id],
+      user_id: current_user.id
+    }
+
+    ::Devices::Find
+      .call(input)
+      .on_failure(:not_found) { |data| render_json(404, device: data[:errors]) }
+      .on_success { |result| render_json(200, device: result[:device]) }
+      .on_unknown { raise NotImplementedError }
+  end
+
   def create
     device_params = params.require(:device).permit(:name, :label, :description)
 

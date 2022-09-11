@@ -3,5 +3,5 @@ Rails.application.routes.draw do
 
   post 'login', to: 'users/sessions#create'
 
-  resources :devices, only: %i[create update]
+  resources :devices, only: %i[show create update]
 end
