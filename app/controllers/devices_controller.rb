@@ -1,6 +1,16 @@
 class DevicesController < ApplicationController
   before_action :authenticate_user
 
+  def index
+    input = {
+      user_id: current_user.id
+    }
+
+    ::Devices::FindAll
+      .call(input)
+      .on_success { |result| render_json(200, devices: result[:devices]) }
+  end
+
   def show
     input = {
       id: params[:id],
