@@ -62,4 +62,17 @@ class DevicesController < ApplicationController
       .on_success { |result| render_json(200, device: result[:device]) }
       .on_unknown { raise NotImplementedError }
   end
+
+  def destroy
+    input = {
+      id: params[:id],
+      user_id: current_user.id
+    }
+
+    ::Devices::Delete
+      .call(input)
+      .on_failure(:not_found) { |data| render_json(404, device: data[errors]) }
+      .on_success { |result| render_json(200, device: result[:device]) }
+      .on_unknown { raise NotImplementedError }
+  end
 end
