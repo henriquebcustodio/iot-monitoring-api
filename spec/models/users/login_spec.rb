@@ -4,13 +4,12 @@ RSpec.describe Users::Login do
   describe '.call' do
     describe 'failures' do
       context "when user doesn't exist" do
-        # given
-        let(:password) { 'sample' }
-
         it 'returns a failure' do
-          # when
+          # given
+          password = 'password'
           email = 'henrique@gmail.com'
 
+          # when
           result = described_class.call(email:, password:)
 
           # then
@@ -18,9 +17,11 @@ RSpec.describe Users::Login do
         end
 
         it 'exposes the error' do
-          # when
+          # given
+          password = 'password'
           email = 'henrique@gmail.com'
 
+          # when
           result = described_class.call(email:, password:)
 
           # then
@@ -31,13 +32,13 @@ RSpec.describe Users::Login do
       end
 
       context 'with an invalid password' do
-        # given
-        let(:user) { User.create(email: 'henrique@gmail.com', password: 'password') }
+        let(:user) { create(:user) }
 
         it 'returns a failure' do
-          # when
+          # given
           password = 'invalid_password'
 
+          # when
           result = described_class.call(email: user.email, password:)
 
           # then
@@ -45,9 +46,10 @@ RSpec.describe Users::Login do
         end
 
         it 'exposes the error' do
-          # when
+          # given
           password = 'invalid_password'
 
+          # when
           result = described_class.call(email: user.email, password:)
 
           # then
@@ -59,20 +61,25 @@ RSpec.describe Users::Login do
     end
 
     describe 'success' do
-      # given
-      let(:user) { User.create(email: 'henrique@gmail.com', password: 'password') }
-
       it 'returns a success' do
+        # given
+        password = 'password'
+        user = create(:user, password_digest: BCrypt::Password.create(password))
+
         # when
-        result = described_class.call(email: user.email, password: user.password)
+        result = described_class.call(email: user.email, password:)
 
         # then
         expect(result).to be_a_success
       end
 
       it 'exposes a token' do
+        # given
+        password = 'password'
+        user = create(:user, password_digest: BCrypt::Password.create(password))
+
         # when
-        result = described_class.call(email: user.email, password: user.password)
+        result = described_class.call(email: user.email, password:)
 
         # then
         expect(result[:token]).to be_a(String)
@@ -80,8 +87,12 @@ RSpec.describe Users::Login do
       end
 
       it 'sets the correct payload' do
+        # given
+        password = 'password'
+        user = create(:user, password_digest: BCrypt::Password.create(password))
+
         # when
-        result = described_class.call(email: user.email, password: user.password)
+        result = described_class.call(email: user.email, password:)
 
         decoded_token = JWT.decode(
           result[:token],

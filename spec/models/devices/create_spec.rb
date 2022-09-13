@@ -1,19 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Devices::Create do
-  def create_user
-    User.create(
-      email: 'henrique@gmail.com',
-      password: 'password',
-      password_confirmation: 'password'
-    )
-  end
-
   describe '.call' do
     describe 'failures' do
       context 'with blank arguments' do
         let(:description) { 'sample' }
-        let(:user) { create_user }
+        let(:user) { create(:user) }
 
         it 'returns a failure' do
           # given
@@ -48,7 +40,7 @@ RSpec.describe Devices::Create do
       context 'with an invalid label' do
         let(:name) { 'sample' }
         let(:description) { 'sample' }
-        let(:user) { create_user }
+        let(:user) { create(:user) }
 
         it 'returns a failure' do
           # given
@@ -117,7 +109,7 @@ RSpec.describe Devices::Create do
 
         let(:description) { 'sample' }
         let(:name) { 'sample' }
-        let(:user) { create_user }
+        let(:user) { create(:user) }
 
         it 'returns a failure' do
           # given
@@ -153,7 +145,7 @@ RSpec.describe Devices::Create do
           name = 'device'
           description = 'device description'
           label = 'device-label'
-          user = create_user
+          user = create(:user)
 
           # when
           result = described_class.call(name:, description:, label:, user:)
@@ -167,7 +159,7 @@ RSpec.describe Devices::Create do
           name = 'device'
           description = 'device description'
           label = 'device-label'
-          user = create_user
+          user = create(:user)
 
           # when
           result = described_class.call(name:, description:, label:, user:)
@@ -188,7 +180,7 @@ RSpec.describe Devices::Create do
           name = 'device'
           description = 'device description'
           label = 'device-label'
-          user = create_user
+          user = create(:user)
 
           # when
           result = described_class.call(name:, description:, label:, user:)

@@ -1,18 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Devices::Update do
-  def create_user
-    User.create(
-      email: 'henrique@gmail.com',
-      password: 'password',
-      password_confirmation: 'password'
-    )
-  end
-
   describe '.call' do
     describe 'failures' do
       context 'with a nonexistent device id' do
-        let(:user) { create_user }
+        let(:user) { create(:user) }
         let(:name) { 'sample' }
         let(:label) { 'sample' }
         let(:description) { 'sample' }
@@ -44,24 +36,16 @@ RSpec.describe Devices::Update do
       end
 
       context 'with an invalid label' do
-        let(:user) { create_user }
         let(:description) { 'sample' }
         let(:name) { 'sample' }
-        let(:device) do
-          Device.create(
-            name: 'sample',
-            label: 'sample',
-            description: 'sample',
-            user:
-          )
-        end
+        let(:device) { create(:device) }
 
         it 'returns a failure' do
           # given
           label = %w[name# /wrong +invalid].sample
 
           # when
-          result = described_class.call(name:, description:, label:, id: device.id, user_id: user.id)
+          result = described_class.call(name:, description:, label:, id: device.id, user_id: device.user_id)
 
           # then
           expect(result).to be_a_failure
@@ -72,7 +56,7 @@ RSpec.describe Devices::Update do
           label = %w[name# /wrong +invalid].sample
 
           # when
-          result = described_class.call(name:, description:, label:, id: device.id, user_id: user.id)
+          result = described_class.call(name:, description:, label:, id: device.id, user_id: device.user_id)
 
           # then
           expect(result.type).to be(:invalid_label)
@@ -84,30 +68,24 @@ RSpec.describe Devices::Update do
       end
 
       context 'with an used device label' do
-        let(:user) { create_user }
+        let(:user) { create(:user) }
         let(:description) { 'sample' }
         let(:name) { 'sample' }
-        let(:device) do
-          Device.create(
-            name: 'sample',
-            label: 'sample',
-            description: 'sample',
-            user:
-          )
-        end
 
         it 'returns a failure' do
           # given
-          label = device.label
-          new_device = Device.create(
-            name: 'sample',
-            label: 'new-device',
-            description: 'sample',
-            user:
-          )
+          first_device = create(:device, user:)
+          second_device = create(:device, label: 'new-device', user:)
+          label = first_device.label
 
           # when
-          result = described_class.call(name:, description:, label:, id: new_device.id, user_id: user.id)
+          result = described_class.call(
+            name:,
+            description:,
+            label:,
+            id: second_device.id,
+            user_id: second_device.user_id
+          )
 
           # then
           expect(result).to be_a_failure
@@ -115,16 +93,18 @@ RSpec.describe Devices::Update do
 
         it 'exposes the errors' do
           # given
-          label = device.label
-          new_device = Device.create(
-            name: 'sample',
-            label: 'new-device',
-            description: 'sample',
-            user:
-          )
+          first_device = create(:device, user:)
+          second_device = create(:device, label: 'new-device', user:)
+          label = first_device.label
 
           # when
-          result = described_class.call(name:, description:, label:, id: new_device.id, user_id: user.id)
+          result = described_class.call(
+            name:,
+            description:,
+            label:,
+            id: second_device.id,
+            user_id: second_device.user_id
+          )
 
           # then
           expect(result.type).to be(:validation_error)
@@ -137,15 +117,7 @@ RSpec.describe Devices::Update do
 
     describe 'success' do
       context 'without blank arguments' do
-        let(:user) { create_user }
-        let(:device) do
-          Device.create(
-            name: 'sample',
-            description: 'sample',
-            label: 'sample',
-            user:
-          )
-        end
+        let(:device) { create(:device) }
 
         it 'returns a success' do
           # given
@@ -154,7 +126,7 @@ RSpec.describe Devices::Update do
           label = 'device label'
 
           # when
-          result = described_class.call(name:, description:, label:, id: device.id, user_id: user.id)
+          result = described_class.call(name:, description:, label:, id: device.id, user_id: device.user_id)
 
           # then
           expect(result).to be_a_success
@@ -167,7 +139,7 @@ RSpec.describe Devices::Update do
           label = 'device label'
 
           # when
-          result = described_class.call(name:, description:, label:, id: device.id, user_id: user.id)
+          result = described_class.call(name:, description:, label:, id: device.id, user_id: device.user_id)
 
           # then
           expect(result[:device]).to have_attributes(
@@ -179,13 +151,12 @@ RSpec.describe Devices::Update do
       end
 
       context 'with blank arguments' do
-        let(:user) { create_user }
         let(:device) do
-          Device.create(
-            name: 'sample',
-            description: 'sample',
-            label: 'sample',
-            user:
+          create(
+            :device,
+            name: 'device',
+            description: 'description',
+            label: 'label'
           )
         end
 
@@ -196,7 +167,7 @@ RSpec.describe Devices::Update do
           label = 'device-label'
 
           # when
-          result = described_class.call(name:, description:, label:, id: device.id, user_id: user.id)
+          result = described_class.call(name:, description:, label:, id: device.id, user_id: device.user_id)
 
           # then
           expect(result).to be_a_success
@@ -209,12 +180,12 @@ RSpec.describe Devices::Update do
           label = 'device-label'
 
           # when
-          result = described_class.call(name:, description:, label:, id: device.id, user_id: user.id)
+          result = described_class.call(name:, description:, label:, id: device.id, user_id: device.user_id)
 
           # then
           expect(result[:device]).to have_attributes(
-            name: 'sample',
-            description: 'sample',
+            name: 'device',
+            description: 'description',
             label:
           )
         end

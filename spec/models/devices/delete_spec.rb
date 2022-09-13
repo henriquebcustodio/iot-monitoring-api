@@ -1,14 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Devices::Delete do
-  def create_user
-    User.create(
-      email: 'henrique@gmail.com',
-      password: 'password',
-      password_confirmation: 'password'
-    )
-  end
-
   describe '.call' do
     describe 'failures' do
       context "when the device doesn't exist" do
@@ -43,18 +35,12 @@ RSpec.describe Devices::Delete do
 
     describe 'success' do
       context 'with a valid device' do
-        let(:user) { create_user }
-
         it 'returns a success' do
           # given
-          device = Device.create(
-            name: 'device',
-            label: 'label',
-            user:
-          )
+          device = create(:device)
 
           # when
-          result = described_class.call(id: device.id, user_id: user.id)
+          result = described_class.call(id: device.id, user_id: device.user_id)
 
           # then
           expect(result).to be_a_success
@@ -62,14 +48,10 @@ RSpec.describe Devices::Delete do
 
         it 'exposes a confirmation message' do
           # given
-          device = Device.create(
-            name: 'device',
-            label: 'label',
-            user:
-          )
+          device = create(:device)
 
           # when
-          result = described_class.call(id: device.id, user_id: user.id)
+          result = described_class.call(id: device.id, user_id: device.user_id)
 
           # then
           expect(result[:device]).to eq('successfully deleted')

@@ -4,14 +4,14 @@ RSpec.describe Users::Register do
   describe '.call' do
     describe 'failures' do
       context 'with a blank passwords' do
-        # given
         let(:email) { 'henrique@husky.io' }
 
         it 'returns a failure' do
-          # when
-          password =  ['', nil, ' '].sample
+          # given
+          password = ['', nil, ' '].sample
           password_confirmation = ['', nil, ' '].sample
 
+          # when
           result = described_class.call(email:, password:, password_confirmation:)
 
           # then
@@ -19,10 +19,11 @@ RSpec.describe Users::Register do
         end
 
         it 'exposes the errors' do
-          # when
+          # given
           password = ['', nil, ' '].sample
           password_confirmation = ['', nil, ' '].sample
 
+          # when
           result = described_class.call(email:, password:, password_confirmation:)
 
           # then
@@ -34,14 +35,14 @@ RSpec.describe Users::Register do
       end
 
       context "when password confirmation doesn't match password" do
-        # given
         let(:email) { 'henrique@husky.io' }
 
         it 'returns a failure' do
-          # when
+          # given
           password = 'sample'
           password_confirmation = 'invalid'
 
+          # when
           result = described_class.call(email:, password:, password_confirmation:)
 
           # then
@@ -49,10 +50,11 @@ RSpec.describe Users::Register do
         end
 
         it 'exposes the errors' do
-          # when
+          # given
           password = 'sample'
           password_confirmation = 'invalid'
 
+          # when
           result = described_class.call(email:, password:, password_confirmation:)
 
           # then
@@ -63,14 +65,14 @@ RSpec.describe Users::Register do
       end
 
       context 'with a blank email' do
-        # given
         let(:password) { 'sample' }
         let(:password_confirmation) { 'sample' }
 
         it 'returns a failure' do
-          # when
+          # given
           email = ['', ' ', nil].sample
 
+          # when
           result = described_class.call(email:, password:, password_confirmation:)
 
           # then
@@ -78,9 +80,10 @@ RSpec.describe Users::Register do
         end
 
         it 'exposes the errors' do
-          # when
+          # given
           email = ['', ' ', nil].sample
 
+          # when
           result = described_class.call(email:, password:, password_confirmation:)
 
           # then
@@ -91,14 +94,14 @@ RSpec.describe Users::Register do
       end
 
       context 'with an invalid email' do
-        # given
         let(:password) { 'sample' }
         let(:password_confirmation) { 'sample' }
 
         it 'returns a failure' do
-          # when
+          # given
           email = [[], {}, 'henrique@', 'email'].sample
 
+          # when
           result = described_class.call(email:, password:, password_confirmation:)
 
           # then
@@ -106,9 +109,10 @@ RSpec.describe Users::Register do
         end
 
         it 'exposes the errors' do
-          # when
+          # given
           email = [[], {}, 'henrique@', 'email'].sample
 
+          # when
           result = described_class.call(email:, password:, password_confirmation:)
 
           # then
@@ -120,12 +124,12 @@ RSpec.describe Users::Register do
     end
 
     describe 'success' do
-      # given
-      let(:email) { 'henrique@husky.io' }
-      let(:password) { 'password' }
-      let(:password_confirmation) { password }
-
       it 'creates the user' do
+        # given
+        email = 'henrique@husky.io'
+        password = 'password'
+        password_confirmation = password
+
         # when
         result = described_class.call(email:, password:, password_confirmation:)
 
@@ -134,6 +138,11 @@ RSpec.describe Users::Register do
       end
 
       it 'exposes the user' do
+        # given
+        email = 'henrique@husky.io'
+        password = 'password'
+        password_confirmation = password
+
         # when
         result = described_class.call(email:, password:, password_confirmation:)
 
