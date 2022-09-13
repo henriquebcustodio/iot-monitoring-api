@@ -45,6 +45,8 @@ gem 'simplecov', require: false, group: :test
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri mingw x64_mingw]
+  gem 'factory_bot_rails', '~> 6.2'
+  gem 'faker', '~> 2.23.0'
   gem 'rspec-rails', '~> 6.0.0.rc1'
 end
 
@@ -54,4 +56,4 @@ group :development do
   gem 'rubocop'
 end
 
-gem "mqtt", "~> 0.5.0"
+gem 'mqtt', '~> 0.5.0'

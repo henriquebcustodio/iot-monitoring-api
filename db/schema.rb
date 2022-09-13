@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_08_002024) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_12_000115) do
   create_table "devices", force: :cascade do |t|
     t.string "name"
     t.string "label"
@@ -29,5 +29,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_08_002024) do
     t.string "password_digest"
   end
 
+  create_table "variables", force: :cascade do |t|
+    t.string "name"
+    t.string "label"
+    t.text "description"
+    t.string "variable_type"
+    t.integer "device_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["device_id"], name: "index_variables_on_device_id"
+  end
+
   add_foreign_key "devices", "users"
+  add_foreign_key "variables", "devices"
 end

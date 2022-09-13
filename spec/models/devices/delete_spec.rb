@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe Devices::Delete do
   def create_user
     User.create(
