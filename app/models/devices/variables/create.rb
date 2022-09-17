@@ -9,6 +9,16 @@ module Devices
       attribute :device_id
 
       def call!
+        errors = {}
+        errors[:name] = ["can't be blank"] if name.blank?
+        errors[:label] = ["can't be blank"] if label.blank?
+
+        return Failure(:blank_arguments, result: { errors: }) unless errors.empty?
+
+        if label.match(%r{[#+/]})
+          return Failure(:invalid_label, result: { errors: { label: 'must not include #, + or / characters' } })
+        end
+
         unless %w[boolean numeric text].include?(type)
           return Failure(:invalid_type, result: { errors: { type: 'should be boolean, numeric or text' } })
         end

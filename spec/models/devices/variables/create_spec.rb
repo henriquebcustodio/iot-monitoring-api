@@ -3,6 +3,102 @@ require 'rails_helper'
 RSpec.describe Devices::Variables::Create do
   describe '.call' do
     describe 'failures' do
+      context 'with blank arguments' do
+        let(:description) { ::Faker::Hacker.say_something_smart }
+        let(:device) { create(:device) }
+        let(:type) { 'boolean' }
+
+        it 'returns a failure' do
+          # given
+          name = ['', nil, ' '].sample
+          label = ['', nil, ' '].sample
+
+          # when
+          result = described_class.call(
+            name:,
+            label:,
+            description:,
+            type:,
+            device_id: device.id,
+            user_id: device.user_id
+          )
+
+          # then
+          expect(result).to be_a_failure
+        end
+
+        it 'exposes the error' do
+          # given
+          name = ['', nil, ' '].sample
+          label = ['', nil, ' '].sample
+
+          # when
+          result = described_class.call(
+            name:,
+            label:,
+            description:,
+            type:,
+            device_id: device.id,
+            user_id: device.user_id
+          )
+
+          # then
+          expect(result.type).to be(:blank_arguments)
+          expect(result[:errors]).to include(
+            name: ["can't be blank"],
+            label: ["can't be blank"]
+          )
+        end
+      end
+
+      context 'with an invalid label' do
+        let(:name) { ::Faker::Hacker.abbreviation }
+        let(:label) { ::Faker::Device.name }
+        let(:description) { ::Faker::Hacker.say_something_smart }
+        let(:device) { create(:device) }
+        let(:type) { 'numeric' }
+
+        it 'returns a failure' do
+          # given
+          label = %w[name# /wrong +invalid].sample
+
+          # when
+          result = described_class.call(
+            name:,
+            label:,
+            description:,
+            type:,
+            device_id: device.id,
+            user_id: device.user_id
+          )
+
+          # then
+          expect(result).to be_a_failure
+        end
+
+        it 'exposes the error' do
+          # given
+          label = %w[name# /wrong +invalid].sample
+
+          # when
+          result = described_class.call(
+            name:,
+            label:,
+            description:,
+            type:,
+            device_id: device.id,
+            user_id: device.user_id
+          )
+
+          # then
+          expect(result.type).to be(:invalid_label)
+
+          expect(result[:errors]).to include(
+            label: 'must not include #, + or / characters'
+          )
+        end
+      end
+
       context 'with an invalid variable type' do
         let(:name) { ::Faker::Hacker.abbreviation }
         let(:label) { ::Faker::Device.name }
@@ -14,8 +110,14 @@ RSpec.describe Devices::Variables::Create do
           type = [{}, 'invalid', []].sample
 
           # when
-          result = described_class.call(name:, label:, description:, type:, device_id: device.id, 
-                                        user_id: device.user_id)
+          result = described_class.call(
+            name:,
+            label:,
+            description:,
+            type:,
+            device_id: device.id,
+            user_id: device.user_id
+          )
 
           # then
           expect(result).to be_a_failure
@@ -26,8 +128,14 @@ RSpec.describe Devices::Variables::Create do
           type = [{}, 'invalid', []].sample
 
           # when
-          result = described_class.call(name:, label:, description:, type:, device_id: device.id, 
-                                        user_id: device.user_id)
+          result = described_class.call(
+            name:,
+            label:,
+            description:,
+            type:,
+            device_id: device.id,
+            user_id: device.user_id
+          )
 
           # then
           expect(result.type).to be(:invalid_type)
@@ -49,7 +157,14 @@ RSpec.describe Devices::Variables::Create do
           device_id = 2
 
           # when
-          result = described_class.call(name:, label:, description:, type:, device_id:, user_id: user.id)
+          result = described_class.call(
+            name:,
+            label:,
+            description:,
+            type:,
+            device_id:,
+            user_id: user.id
+          )
 
           # then
           expect(result).to be_a_failure
@@ -60,7 +175,14 @@ RSpec.describe Devices::Variables::Create do
           device_id = 2
 
           # when
-          result = described_class.call(name:, label:, description:, type:, device_id:, user_id: user.id)
+          result = described_class.call(
+            name:,
+            label:,
+            description:,
+            type:,
+            device_id:,
+            user_id: user.id
+          )
 
           # then
           expect(result.type).to be(:device_not_found)
@@ -69,7 +191,7 @@ RSpec.describe Devices::Variables::Create do
           )
         end
       end
-      
+
       context 'with an used variable label' do
         let(:name) { ::Faker::Hacker.abbreviation }
         let(:description) { ::Faker::Hacker.say_something_smart }
