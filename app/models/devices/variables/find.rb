@@ -1,8 +1,7 @@
 module Devices
   module Variables
     class Find < ::Micro::Case
-      attribute :id, default: ::Utils::ToStrippedString
-      attribute :user_id
+      attributes :id, :user_id
 
       def call!
         variable = Variable.find_by(id:)
