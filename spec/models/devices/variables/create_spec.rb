@@ -10,8 +10,8 @@ RSpec.describe Devices::Variables::Create do
 
         it 'returns a failure' do
           # given
-          name = ['', nil, ' '].sample
-          label = ['', nil, ' '].sample
+          name = ['', ' ', nil].sample
+          label = ['', ' ', nil].sample
 
           # when
           result = described_class.call(
@@ -19,8 +19,7 @@ RSpec.describe Devices::Variables::Create do
             label:,
             description:,
             type:,
-            device_id: device.id,
-            user_id: device.user_id
+            device:
           )
 
           # then
@@ -29,8 +28,8 @@ RSpec.describe Devices::Variables::Create do
 
         it 'exposes the error' do
           # given
-          name = ['', nil, ' '].sample
-          label = ['', nil, ' '].sample
+          name = ['', ' '].sample
+          label = ['', ' '].sample
 
           # when
           result = described_class.call(
@@ -38,8 +37,7 @@ RSpec.describe Devices::Variables::Create do
             label:,
             description:,
             type:,
-            device_id: device.id,
-            user_id: device.user_id
+            device:
           )
 
           # then
@@ -68,8 +66,7 @@ RSpec.describe Devices::Variables::Create do
             label:,
             description:,
             type:,
-            device_id: device.id,
-            user_id: device.user_id
+            device:
           )
 
           # then
@@ -86,8 +83,7 @@ RSpec.describe Devices::Variables::Create do
             label:,
             description:,
             type:,
-            device_id: device.id,
-            user_id: device.user_id
+            device:
           )
 
           # then
@@ -115,8 +111,7 @@ RSpec.describe Devices::Variables::Create do
             label:,
             description:,
             type:,
-            device_id: device.id,
-            user_id: device.user_id
+            device:
           )
 
           # then
@@ -133,61 +128,13 @@ RSpec.describe Devices::Variables::Create do
             label:,
             description:,
             type:,
-            device_id: device.id,
-            user_id: device.user_id
+            device:
           )
 
           # then
           expect(result.type).to be(:invalid_type)
           expect(result[:errors]).to include(
             type: 'should be boolean, numeric or text'
-          )
-        end
-      end
-
-      context "when the device doesn't exist" do
-        let(:name) { ::Faker::Hacker.abbreviation }
-        let(:label) { ::Faker::Device.name }
-        let(:description) { ::Faker::Hacker.say_something_smart }
-        let(:type) { 'boolean' }
-        let(:user) { create(:user) }
-
-        it 'returns a failure' do
-          # given
-          device_id = 2
-
-          # when
-          result = described_class.call(
-            name:,
-            label:,
-            description:,
-            type:,
-            device_id:,
-            user_id: user.id
-          )
-
-          # then
-          expect(result).to be_a_failure
-        end
-
-        it 'exposes the error' do
-          # given
-          device_id = 2
-
-          # when
-          result = described_class.call(
-            name:,
-            label:,
-            description:,
-            type:,
-            device_id:,
-            user_id: user.id
-          )
-
-          # then
-          expect(result.type).to be(:device_not_found)
-          expect(result[:errors]).to include(
-            id: 'not found'
           )
         end
       end
@@ -208,8 +155,7 @@ RSpec.describe Devices::Variables::Create do
             label: variable.label,
             description:,
             type:,
-            device_id: device.id,
-            user_id: device.user_id
+            device:
           )
 
           # then
@@ -226,8 +172,7 @@ RSpec.describe Devices::Variables::Create do
             label: variable.label,
             description:,
             type:,
-            device_id: device.id,
-            user_id: device.user_id
+            device:
           )
 
           # then
@@ -240,12 +185,12 @@ RSpec.describe Devices::Variables::Create do
     end
 
     describe 'success' do
-      context 'with valid arguments' do
+      context 'with all arguments' do
         it 'returns a success' do
           # given
           name = ::Faker::Hacker.abbreviation
           description = ::Faker::Hacker.say_something_smart
-          label = ::Faker::Device.model_name
+          label = 'my-variable'
           type = %w[boolean numeric text].sample
           device = create(:device)
 
@@ -255,8 +200,7 @@ RSpec.describe Devices::Variables::Create do
             label:,
             description:,
             type:,
-            device_id: device.id,
-            user_id: device.user_id
+            device:
           )
 
           # then
@@ -267,7 +211,7 @@ RSpec.describe Devices::Variables::Create do
           # given
           name = ::Faker::Hacker.abbreviation
           description = ::Faker::Hacker.say_something_smart
-          label = ::Faker::Device.model_name
+          label = 'my-variable'
           type = %w[boolean numeric text].sample
           device = create(:device)
 
@@ -277,8 +221,7 @@ RSpec.describe Devices::Variables::Create do
             label:,
             description:,
             type:,
-            device_id: device.id,
-            user_id: device.user_id
+            device:
           )
 
           # then
@@ -286,6 +229,57 @@ RSpec.describe Devices::Variables::Create do
           expect(result[:variable]).to have_attributes(
             name:,
             description:,
+            label:,
+            variable_type: type,
+            device:
+          )
+        end
+      end
+
+      context 'without a description' do
+        it 'returns a success' do
+          # given
+          name = ::Faker::Hacker.abbreviation
+          description = nil
+          label = 'my-variable'
+          type = %w[boolean numeric text].sample
+          device = create(:device)
+
+          # when
+          result = described_class.call(
+            name:,
+            label:,
+            description:,
+            type:,
+            device:
+          )
+
+          # then
+          expect(result).to be_a_success
+        end
+
+        it 'sets the description to ""' do
+          # given
+          name = ::Faker::Hacker.abbreviation
+          description = nil
+          label = 'my-variable'
+          type = %w[boolean numeric text].sample
+          device = create(:device)
+
+          # when
+          result = described_class.call(
+            name:,
+            label:,
+            description:,
+            type:,
+            device:
+          )
+
+          # then
+          expect(result[:variable]).to be_a(Variable)
+          expect(result[:variable]).to have_attributes(
+            name:,
+            description: '',
             label:,
             variable_type: type,
             device:
