@@ -1,11 +1,10 @@
 module Devices
   module Variables
     class Update < ::Micro::Case
-      attribute :name, validates: { kind: { of: [String, nil] } }, default: ::Utils::ToStrippedString
-      attribute :label, validates: { kind: { of: [String, nil] } }, default: ::Utils::ToStrippedString
-      attribute :description, validates: { kind: { of: [String, nil] } }, default: ::Utils::ToStrippedString
-      attribute :type, validates: { kind: { of: [String, nil] } }, default: ::Utils::ToStrippedString
+      attributes :name, :label, :description, :type, default: ::Utils::ToStrippedString
       attribute :variable, validates: { kind: Variable }
+
+      validates :name, :label, :description, :type, kind: { of: [String, nil] }
 
       NotNilAndNotBlank = ->(value) { !value.nil? && !value.blank? }
 
