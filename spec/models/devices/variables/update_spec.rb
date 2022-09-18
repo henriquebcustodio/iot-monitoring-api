@@ -187,7 +187,7 @@ RSpec.describe Devices::Variables::Update do
         it 'returns a success' do
           # given
           name = ::Faker::Hacker.abbreviation
-          description = ::Faker::Hacker.say_something_smart
+          description = ''
 
           # when
           result = described_class.call(
@@ -200,10 +200,10 @@ RSpec.describe Devices::Variables::Update do
           expect(result).to be_a_success
         end
 
-        it 'exposes the variable' do
+        it "doesn't change the other attributes" do
           # given
           name = ::Faker::Hacker.abbreviation
-          description = ::Faker::Hacker.say_something_smart
+          description = ''
 
           old_label = variable.label
           old_type = variable.variable_type

@@ -1,26 +1,23 @@
 module Devices
   module Variables
     class Update < ::Micro::Case
-      attributes :name, :label, :description, :type, default: ::Utils::ToStrippedString
+      attributes :name, :label, :type, default: ::Utils::ToStrippedString
+      attribute :description, default: ->(val) { val.nil? ? nil : ::Utils::ToStrippedString[val] }
       attribute :variable, validates: { kind: Variable }
 
-      validates :name, :label, :description, :type, kind: { of: [String, nil] }
-
-      NotNilAndNotBlank = ->(value) { !value.nil? && !value.blank? }
-
       def call!
-        if !label.nil? && label.match(%r{[#+/]})
+        if label.match(%r{[#+/]})
           return Failure(:invalid_label, result: { errors: { label: 'must not include #, + or / characters' } })
         end
 
-        if !type.nil? && !%w[boolean numeric text].include?(type)
+        if !type.blank? && !%w[boolean numeric text].include?(type)
           return Failure(:invalid_type, result: { errors: { type: 'should be boolean, numeric or text' } })
         end
 
-        variable.name = name if NotNilAndNotBlank[name]
-        variable.label = label if NotNilAndNotBlank[label]
+        variable.name = name unless name.blank?
+        variable.label = label unless label.blank?
         variable.description = description unless description.nil?
-        variable.variable_type = type if NotNilAndNotBlank[type]
+        variable.variable_type = type unless type.blank?
 
         if variable.save
           Success(result: { variable: })
