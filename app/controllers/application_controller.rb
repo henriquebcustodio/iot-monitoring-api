@@ -4,7 +4,7 @@ class ApplicationController < ActionController::API
   rescue_from ActionController::ParameterMissing, with: :show_parameter_missing_error
 
   def authenticate_user
-    token = request.headers['Authorization'].split(' ').last
+    token = request.headers['Authorization']&.split(' ')&.last
 
     ::Users::Authenticate
       .call(token:)
