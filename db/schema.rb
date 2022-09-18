@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_12_000115) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_18_001219) do
   create_table "devices", force: :cascade do |t|
     t.string "name"
     t.string "label"
@@ -30,10 +30,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_12_000115) do
   end
 
   create_table "variables", force: :cascade do |t|
-    t.string "name"
-    t.string "label"
-    t.text "description"
-    t.string "variable_type"
+    t.string "name", null: false
+    t.string "label", null: false
+    t.text "description", null: false
+    t.string "variable_type", null: false
     t.integer "device_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
