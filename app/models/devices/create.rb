@@ -16,13 +16,15 @@ module Devices
         return Failure(:invalid_label, result: { errors: { label: 'must not include #, + or / characters' } })
       end
 
-      token = generate_token
+      token = SecureRandom.uuid
+      topic_id = SecureRandom.hex(10)
 
       device = Device.new(
         name:,
         description:,
         label:,
         token:,
+        topic_id:,
         user:
       )
 
@@ -31,12 +33,6 @@ module Devices
       else
         Failure(:validation_error, result: { errors: device.errors.as_json })
       end
-    end
-
-    private
-
-    def generate_token
-      SecureRandom.uuid
     end
   end
 end

@@ -189,6 +189,22 @@ RSpec.describe Devices::Create do
           expect(token).to be_a(String)
           expect(token.length).to eq(36)
         end
+
+        it 'generates a topic id' do
+          # given
+          name = 'device'
+          description = 'device description'
+          label = 'device-label'
+          user = create(:user)
+
+          # when
+          result = described_class.call(name:, description:, label:, user:)
+
+          # then
+          topic_id = result[:device]['topic_id']
+          expect(topic_id).to be_a(String)
+          expect(topic_id.length).to eq(20)
+        end
       end
     end
   end

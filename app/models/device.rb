@@ -3,5 +3,5 @@ class Device < ApplicationRecord
   has_many :variables
 
   validates :label, uniqueness: { scope: :user_id }
-  validates :token, uniqueness: true
+  validates :token, :topic_id, uniqueness: true
 end
