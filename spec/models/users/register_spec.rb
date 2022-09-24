@@ -148,8 +148,7 @@ RSpec.describe Users::Register do
 
         # then
         expect(result[:user]).to include(
-          'email' => email,
-          'id' => 1
+          'email' => email
         )
       end
     end

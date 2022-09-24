@@ -11,11 +11,14 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2022_09_18_001219) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "devices", force: :cascade do |t|
     t.string "name"
     t.string "label"
     t.text "description"
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "token"
@@ -34,7 +37,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_18_001219) do
     t.string "label", null: false
     t.text "description", null: false
     t.string "variable_type", null: false
-    t.integer "device_id", null: false
+    t.bigint "device_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["device_id"], name: "index_variables_on_device_id"

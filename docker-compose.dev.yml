@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: iot-monitoring
+    image: postgres
+    environment:
+      POSTGRES_USER: iot-monitoring
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5435:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:

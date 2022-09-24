@@ -167,7 +167,6 @@ RSpec.describe Devices::Create do
           # then
           expect(result[:device]).to be_a(Device)
           expect(result[:device]).to have_attributes(
-            id: 1,
             name:,
             description:,
             label:,

@@ -32,6 +32,11 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
+# IDE Files
 /.idea
 
+# SimpleCov report
 /coverage
+
+# .env files
+.env
