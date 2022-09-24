@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_24_172921) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_24_173550) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "data_points", force: :cascade do |t|
+    t.boolean "bool_value"
+    t.float "numeric_value"
+    t.text "text_value"
+    t.datetime "timestamp", null: false
+    t.bigint "variable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["variable_id"], name: "index_data_points_on_variable_id"
+  end
 
   create_table "devices", force: :cascade do |t|
     t.string "name"
@@ -44,6 +55,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_24_172921) do
     t.index ["device_id"], name: "index_variables_on_device_id"
   end
 
+  add_foreign_key "data_points", "variables"
   add_foreign_key "devices", "users"
   add_foreign_key "variables", "devices"
 end
