@@ -3,6 +3,7 @@ FactoryBot.define do
     name { ::Faker::Name.name }
     label { ::Faker::Device.model_name }
     token { SecureRandom.uuid }
+    topic_id { SecureRandom.hex(10) }
     description { ::Faker::Device.model_name }
     user
   end
