@@ -1,7 +1,7 @@
 class Variable < ApplicationRecord
   belongs_to :device
 
-  has_many :data_points
+  has_many :data_points, dependent: :destroy
 
   delegate :user, to: :device
 
