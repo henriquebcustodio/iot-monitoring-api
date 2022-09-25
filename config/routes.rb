@@ -6,5 +6,10 @@ Rails.application.routes.draw do
   resources :devices, only: %i[index show create update destroy] do
     resources :variables, only: %i[index create]
   end
-  resources :variables, only: %i[show update destroy]
+
+  resources :variables, only: %i[show update destroy] do
+    resources :data_points, only: %i[index create]
+  end
+
+  resources :data_points, only: %i[destroy]
 end
