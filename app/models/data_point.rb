@@ -1,6 +1,8 @@
 class DataPoint < ApplicationRecord
   belongs_to :variable
 
+  delegate :user, to: :variable
+
   validates :timestamp, presence: true
 
   def as_json(options = {})
