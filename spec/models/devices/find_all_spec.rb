@@ -7,8 +7,8 @@ RSpec.describe Devices::FindAll do
 
       it 'returns a success' do
         # given
-        device1 = create(:device, label: 'device1', user:)
-        device2 = create(:device, label: 'device2', user:)
+        device1 = create(:device, user:)
+        device2 = create(:device, user:)
 
         # when
         result = described_class.call(user_id: user.id)
@@ -19,8 +19,8 @@ RSpec.describe Devices::FindAll do
 
       it 'exposes the devices' do
         # given
-        device1 = create(:device, label: 'device1', user:)
-        device2 = create(:device, label: 'device2', user:)
+        device1 = create(:device, user:)
+        device2 = create(:device, user:)
 
         # when
         result = described_class.call(user_id: user.id)

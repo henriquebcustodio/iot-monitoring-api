@@ -10,10 +10,9 @@ RSpec.describe Devices::Create do
         it 'returns a failure' do
           # given
           name = ['', ' ', nil].sample
-          label = ['', ' ', nil].sample
 
           # when
-          result = described_class.call(name:, description:, label:, user:)
+          result = described_class.call(name:, description:, user:)
 
           # then
           expect(result).to be_a_failure
@@ -22,56 +21,21 @@ RSpec.describe Devices::Create do
         it 'exposes the errors' do
           # given
           name = ['', ' ', nil].sample
-          label = ['', ' ', nil].sample
 
           # when
-          result = described_class.call(name:, description:, label:, user:)
+          result = described_class.call(name:, description:, user:)
 
           # then
           expect(result.type).to be(:blank_arguments)
 
           expect(result[:errors]).to include(
-            name: ["can't be blank"],
-            label: ["can't be blank"]
-          )
-        end
-      end
-
-      context 'with an invalid label' do
-        let(:name) { 'sample' }
-        let(:description) { 'sample' }
-        let(:user) { create(:user) }
-
-        it 'returns a failure' do
-          # given
-          label = %w[name# /wrong +invalid].sample
-
-          # when
-          result = described_class.call(name:, description:, label:, user:)
-
-          # then
-          expect(result).to be_a_failure
-        end
-
-        it 'exposes the error' do
-          # given
-          label = %w[name# /wrong +invalid].sample
-
-          # when
-          result = described_class.call(name:, description:, label:, user:)
-
-          # then
-          expect(result.type).to be(:invalid_label)
-
-          expect(result[:errors]).to include(
-            label: 'must not include #, + or / characters'
+            name: ["can't be blank"]
           )
         end
       end
 
       context 'with an invalid user' do
         let(:name) { 'sample' }
-        let(:label) { 'sample' }
         let(:description) { 'sample' }
 
         it 'returns a failure' do
@@ -79,7 +43,7 @@ RSpec.describe Devices::Create do
           user = [{}, [], nil].sample
 
           # when
-          result = described_class.call(name:, description:, label:, user:)
+          result = described_class.call(name:, description:, user:)
 
           # then
           expect(result).to be_a_failure
@@ -90,50 +54,10 @@ RSpec.describe Devices::Create do
           user = [{}, [], nil].sample
 
           # when
-          result = described_class.call(name:, description:, label:, user:)
+          result = described_class.call(name:, description:, user:)
 
           # then
           expect(result.type).to be(:invalid_attributes)
-        end
-      end
-
-      context 'with an used device label' do
-        let(:device) do
-          Device.create(
-            name: 'sample',
-            label: 'sample',
-            description: 'sample',
-            user:
-          )
-        end
-
-        let(:description) { 'sample' }
-        let(:name) { 'sample' }
-        let(:user) { create(:user) }
-
-        it 'returns a failure' do
-          # given
-          label = device.label
-
-          # when
-          result = described_class.call(name:, description:, label:, user:)
-
-          # then
-          expect(result).to be_a_failure
-        end
-
-        it 'exposes the errors' do
-          # given
-          label = device.label
-
-          # when
-          result = described_class.call(name:, description:, label:, user:)
-
-          # then
-          expect(result.type).to be(:validation_error)
-          expect(result[:errors]).to include(
-            label: ['has already been taken']
-          )
         end
       end
     end
@@ -144,11 +68,10 @@ RSpec.describe Devices::Create do
           # given
           name = 'device'
           description = 'device description'
-          label = 'device-label'
           user = create(:user)
 
           # when
-          result = described_class.call(name:, description:, label:, user:)
+          result = described_class.call(name:, description:, user:)
 
           # then
           expect(result).to be_a_success
@@ -158,18 +81,16 @@ RSpec.describe Devices::Create do
           # given
           name = 'device'
           description = 'device description'
-          label = 'device-label'
           user = create(:user)
 
           # when
-          result = described_class.call(name:, description:, label:, user:)
+          result = described_class.call(name:, description:, user:)
 
           # then
           expect(result[:device]).to be_a(Device)
           expect(result[:device]).to have_attributes(
             name:,
             description:,
-            label:,
             user_id: user.id
           )
         end
@@ -178,11 +99,10 @@ RSpec.describe Devices::Create do
           # given
           name = 'device'
           description = 'device description'
-          label = 'device-label'
           user = create(:user)
 
           # when
-          result = described_class.call(name:, description:, label:, user:)
+          result = described_class.call(name:, description:, user:)
 
           # then
           token = result[:device]['token']
@@ -194,11 +114,10 @@ RSpec.describe Devices::Create do
           # given
           name = 'device'
           description = 'device description'
-          label = 'device-label'
           user = create(:user)
 
           # when
-          result = described_class.call(name:, description:, label:, user:)
+          result = described_class.call(name:, description:, user:)
 
           # then
           topic_id = result[:device]['topic_id']
