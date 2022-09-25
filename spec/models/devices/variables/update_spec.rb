@@ -225,6 +225,26 @@ RSpec.describe Devices::Variables::Update do
           )
         end
       end
+
+      context 'when the variable type is updated' do
+        let(:variable) { create(:variable, variable_type: 'numeric') }
+
+        it 'removes all the associated data points' do
+          # given
+          create(:data_point, variable:)
+          create(:data_point, variable:)
+          create(:data_point, variable:)
+
+          # when
+          described_class.call(
+            variable:,
+            type: 'boolean'
+          )
+
+          # then
+          expect(variable.data_points.empty?).to be(true)
+        end
+      end
     end
   end
 end

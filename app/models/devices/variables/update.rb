@@ -17,7 +17,11 @@ module Devices
         variable.name = name unless name.blank?
         variable.label = label unless label.blank?
         variable.description = description unless description.nil?
-        variable.variable_type = type unless type.blank?
+
+        unless type.blank?
+          variable.variable_type = type unless type.blank?
+          variable.data_points.destroy_all
+        end
 
         if variable.save
           Success(result: { variable: })
