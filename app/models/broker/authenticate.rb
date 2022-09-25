@@ -3,9 +3,9 @@ module Broker
     attribute :token
 
     def call!
-      return Failure(:unauthorized) if token != ENV['BROKER_TOKEN']
+      return Failure(:unauthenticated) if token != ENV['BROKER_TOKEN']
 
-      Success(:authorized)
+      Success(:authenticated)
     end
   end
 end
