@@ -12,4 +12,6 @@ Rails.application.routes.draw do
   end
 
   resources :data_points, only: %i[destroy]
+
+  post 'broker/devices/authenticate', to: 'broker/devices/authorization#create'
 end
