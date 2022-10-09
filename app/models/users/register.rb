@@ -27,10 +27,18 @@ module Users
       )
 
       if user.save
-        Success(:user_created, result: { user: user.as_json(except: [:password_digest]) })
+        token = generate_token({ exp: (Date.today + 1.month).to_time.to_i, id: user.id, email: user.email })
+
+        Success(:user_created, result: { user: user.as_json(except: [:password_digest]).merge({ token: }) })
       else
         Failure(:validation_error, result: { errors: user.errors.as_json })
       end
+    end
+
+    def generate_token(payload)
+      secret_key = Rails.application.credentials.secret_key
+
+      JWT.encode payload, secret_key, 'HS256'
     end
   end
 end

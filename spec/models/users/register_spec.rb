@@ -151,6 +151,44 @@ RSpec.describe Users::Register do
           'email' => email
         )
       end
+
+      it 'exposes a token' do
+        # given
+        email = 'henrique@husky.io'
+        password = 'password'
+        password_confirmation = password
+
+        # when
+        result = described_class.call(email:, password:, password_confirmation:)
+
+        # then
+        expect(result[:user][:token]).to be_a(String)
+        expect(result[:user][:token].start_with?('ey')).to be(true)
+      end
+
+      it 'sets the correct payload' do
+        # given
+        email = 'henrique@husky.io'
+        password = 'password'
+        password_confirmation = password
+
+        # when
+        result = described_class.call(email:, password:, password_confirmation:)
+
+        decoded_token = JWT.decode(
+          result[:user][:token],
+          Rails.application.credentials.secret_key,
+          true,
+          { algorithm: 'HS256' }
+        )
+
+        # then
+        expect(decoded_token.first).to include(
+          'email' => email,
+          'exp' => (Date.today + 1.month).to_time.to_i,
+          'id' => result[:user]['id']
+        )
+      end
     end
   end
 end
