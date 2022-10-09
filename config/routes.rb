@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   post 'login', to: 'users/sessions#create'
 
+  get 'token', to: 'users/sessions#validate_token'
+
   resources :devices, only: %i[index show create update destroy] do
     resources :variables, only: %i[index create]
   end

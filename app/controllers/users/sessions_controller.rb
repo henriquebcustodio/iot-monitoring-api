@@ -14,5 +14,9 @@ module Users
         .on_failure(:invalid_password) { |data| render_json(401, user: data[:errors]) }
         .on_success { |result| render_json(200, token: result[:token]) }
     end
+
+    def validate_token
+      authenticate_user
+    end
   end
 end
