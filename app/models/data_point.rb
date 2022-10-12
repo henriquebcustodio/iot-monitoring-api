@@ -6,8 +6,9 @@ class DataPoint < ApplicationRecord
   validates :timestamp, presence: true
 
   def as_json(options = {})
-    options.merge!(methods: :value, except: %i[bool_value numeric_value text_value])
-    super(options.merge!(methods: :value))
+    # FIXME
+    # options.merge!(methods: :value, except: %i[bool_value numeric_value text_value])
+    super(options)
   end
 
   def value

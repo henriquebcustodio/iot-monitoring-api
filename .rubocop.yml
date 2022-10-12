@@ -24,3 +24,6 @@ Metrics/PerceivedComplexity:
 
 Style/NumericLiterals:
   Enabled: false
+
+Style/ModuleFunction:
+  Enabled: false
