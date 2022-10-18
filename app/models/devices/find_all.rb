@@ -3,7 +3,7 @@ module Devices
     attribute :user_id
 
     def call!
-      devices = Device.where(user_id:)
+      devices = Device.where(user_id:).order(:id)
 
       Success(result: { devices: })
     end
