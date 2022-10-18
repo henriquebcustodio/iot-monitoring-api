@@ -98,8 +98,8 @@ RSpec.describe Devices::Update do
 
           # then
           expect(result[:device]).to have_attributes(
-            name: 'device',
-            description: 'description'
+            name:,
+            description:
           )
         end
       end

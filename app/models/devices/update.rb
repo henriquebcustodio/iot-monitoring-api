@@ -8,8 +8,8 @@ module Devices
         
       return Failure(:not_found, result: { errors: { id: ['not found'] } }) if device.nil?
         
-      device.name = name unless name.blank?
-      device.description = description unless description.blank?
+      device.name = name
+      device.description = description
 
       if device.save
         Success(:device_updated, result: { device: })
