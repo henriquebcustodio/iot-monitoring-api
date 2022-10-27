@@ -37,7 +37,7 @@ RSpec.describe Devices::Variables::DataPoints::Find do
 
         it 'returns a failure' do
           # given
-          other_user = create(:data_point)
+          other_user = create(:user)
 
           # when
           result = described_class.call(id: data_point.id, user_id: other_user.id)
@@ -48,7 +48,7 @@ RSpec.describe Devices::Variables::DataPoints::Find do
 
         it 'exposes the error' do
           # given
-          other_user = create(:data_point)
+          other_user = create(:user)
 
           # when
           result = described_class.call(id: data_point.id, user_id: other_user.id)
