@@ -5,7 +5,7 @@ module Devices
         attribute :variable, validates: { kind: Variable }
 
         def call!
-          data_points = variable.data_points
+          data_points = variable.data_points.order(timestamp: :desc)
 
           Success(result: { data_points: })
         end

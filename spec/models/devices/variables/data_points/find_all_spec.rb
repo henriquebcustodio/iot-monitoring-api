@@ -55,12 +55,7 @@ RSpec.describe Devices::Variables::DataPoints::FindAll do
 
           # then
           expect(result[:data_points])
-            .to match(
-              [
-                data_point1,
-                data_point2
-              ]
-            )
+            .to include(data_point1, data_point2)
         end
       end
     end
