@@ -34,7 +34,11 @@ module Broker
             "variable_#{variable.id}",
             {
               timestamp: data_point[:timestamp],
-              value:
+              value: [
+                data_point[:numeric_value],
+                data_point[:bool_value],
+                data_point[:text_value]
+              ].compact.first
             }
           )
         end
