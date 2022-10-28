@@ -22,11 +22,12 @@ module Devices
 
           case variable.variable_type
           when 'boolean'
-            unless [true, false].include?(value)
+            downcase_value = value.to_s.downcase
+            unless %w[true false].include?(downcase_value)
               return Failure(:invalid_value_type, result: { errors: { value: 'must be boolean' } })
             end
 
-            data_point[:bool_value] = value
+            data_point[:bool_value] = downcase_value == 'true'
 
           when 'numeric'
             unless value.is_a?(Numeric)
