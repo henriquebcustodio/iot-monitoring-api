@@ -30,6 +30,7 @@ module Broker
           next if data_point.nil?
 
           ::Devices::Variables::DataPoints::BatchWriter.instance.push(data_point)
+
           ActionCable.server.broadcast(
             "variable_#{variable.id}",
             {
