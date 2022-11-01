@@ -1,12 +1,16 @@
 module Broker
   module Messages
-    Parse = lambda do |message|
-      return unless ::Kind::String?(message)
+    class Parse < ::Micro::Case
+      attribute :message, validates: { kind: String }
 
-      ::JSON.parse(message)
+      def call!
+        parsed_message = ::JSON.parse(message)
 
-    rescue ::StandardError
-      return
+        Success(:message_parsed, result: { message: parsed_message })
+
+      rescue ::StandardError
+        Failure(:parsing_failed)
+      end
     end
   end
 end

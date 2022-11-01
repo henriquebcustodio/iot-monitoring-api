@@ -27,13 +27,15 @@ module Broker
       end
 
       def process_message(topic, message)
-        parsed_message = Parse[message]
+        Parse.call(message:) do |on|
+          on.success do |result|
+            parsed_message = result[:message]
 
-        return if parsed_message.nil?
+            parsed_message[:timestamp] = ::DateTime.now.strftime('%Q').to_i unless parsed_message[:timestamp]
 
-        parsed_message[:timestamp] = ::DateTime.now.strftime('%Q').to_i unless parsed_message[:timestamp]
-
-        BatchProcessor.instance.push(topic:, payload: parsed_message)
+            BatchProcessor.instance.push(topic:, payload: parsed_message)
+          end
+        end
       end
 
       private_class_method :setup_client, :subscribe_to_wildcard
