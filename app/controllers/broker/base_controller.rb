@@ -2,7 +2,7 @@ module Broker
   class BaseController < ApplicationController
     private
 
-    def authenticate_user
+    def authenticate_broker
       token = request.headers['Authorization']&.split(' ')&.last
 
       ::Broker::Authenticate

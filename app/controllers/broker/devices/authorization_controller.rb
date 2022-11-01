@@ -1,7 +1,7 @@
 module Broker
   module Devices
     class AuthorizationController < BaseController
-      before_action :authenticate_user
+      before_action :authenticate_broker
 
       def create
         device_params = params.require(:device).permit(:token)
