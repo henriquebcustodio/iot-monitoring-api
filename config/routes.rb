@@ -9,15 +9,15 @@ Rails.application.routes.draw do
 
   get 'token', to: 'users/sessions#validate_token'
 
-  resources :devices, only: %i[index show create update destroy] do
-    resources :variables, only: %i[index create]
+  resources :devices, only: %i[index show create update destroy], controller: 'devices' do
+    resources :variables, only: %i[index create], controller: 'devices/variables'
   end
 
-  resources :variables, only: %i[show update destroy] do
-    resources :data_points, only: %i[index create]
+  resources :variables, only: %i[show update destroy], controller: 'devices/variables' do
+    resources :data_points, only: %i[index create], controller: 'devices/variables/data_points'
   end
 
-  resources :data_points, only: %i[destroy]
+  resources :data_points, only: %i[destroy], controller: 'devices/variables/data_points'
 
   post 'broker/devices/authenticate', to: 'broker/devices/authorization#create'
 end
