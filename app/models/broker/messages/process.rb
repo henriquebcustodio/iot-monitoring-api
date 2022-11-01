@@ -1,8 +1,8 @@
 module Broker
   module Messages
     class Process < ::Micro::Case
-      attribute :topic
-      attribute :payload, validates: { kind: ::Hash }
+      attribute :topic, validates: { kind: ::String }
+      attribute :message, validates: { kind: ::Hash }
 
       def call!
         topic_id = topic.split('/').last
@@ -11,40 +11,36 @@ module Broker
 
         return Failure(:device_not_found) if device.nil?
 
-        payload.each do |label, data|
-          variable = device.variables.find_by(label:)
+        variable = device.variables.find_by(label: message['label'])
 
-          break if variable.nil?
+        return Failure(:variable_not_found) if variable.nil?
 
-          value = data['value']
-
-          data_point = ::Devices::Variables::DataPoints::AsHash.call(
-            variable:,
-            value:,
-            timestamp: payload[:timestamp]
-          ) do |on|
-            on.success { |result| result[:data_point] }
-            on.failure { nil }
-          end
-
-          next if data_point.nil?
-
-          ::Devices::Variables::DataPoints::BatchWriter.instance.push(data_point)
-
-          ActionCable.server.broadcast(
-            "variable_#{variable.id}",
-            {
-              timestamp: data_point[:timestamp],
-              value: [
-                data_point[:numeric_value],
-                data_point[:bool_value],
-                data_point[:text_value]
-              ].compact.first
-            }
-          )
+        data_point = ::Devices::Variables::DataPoints::AsHash.call(
+          variable:,
+          value: message['value'],
+          timestamp: message['timestamp']
+        ) do |on|
+          on.success { |result| result[:data_point] }
+          on.failure { nil }
         end
 
-        Success(:messaged_processed)
+        return Failure(:invalid_data_point) if data_point.nil?
+
+        ::Devices::Variables::DataPoints::BatchWriter.instance.push(data_point)
+
+        ActionCable.server.broadcast(
+          "variable_#{variable.id}",
+          {
+            timestamp: data_point[:timestamp],
+            value: [
+              data_point[:numeric_value],
+              data_point[:bool_value],
+              data_point[:text_value]
+            ].compact.first
+          }
+        )
+
+        Success(:message_processed)
       end
     end
   end

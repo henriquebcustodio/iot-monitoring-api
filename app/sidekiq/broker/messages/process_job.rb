@@ -5,7 +5,7 @@ module Broker
 
       def perform(messages)
         messages.each do |message|
-          ::Broker::Messages::Process.call(topic: message[:topic], payload: message[:payload])
+          ::Broker::Messages::Process.call(topic: message[:topic], message: message[:payload])
         end
       end
     end

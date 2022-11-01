@@ -31,7 +31,7 @@ module Broker
           on.success do |result|
             parsed_message = result[:message]
 
-            parsed_message[:timestamp] = ::DateTime.now.strftime('%Q').to_i unless parsed_message[:timestamp]
+            parsed_message['timestamp'] = ::DateTime.now.strftime('%Q').to_i unless parsed_message['timestamp']
 
             BatchProcessor.instance.push(topic:, payload: parsed_message)
           end
